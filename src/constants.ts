@@ -17,3 +17,17 @@ export const sources = [
 ]
 
 export const addArticlesInterval = 120000
+
+export const followingsLocalStorageKey = "followings"
+
+export const categories = [
+    "Politics",
+     "Technology", 
+    "Religion",
+    "Sports",
+    "Finance",
+    "PC Games",
+    "Crime",
+    
+
+]

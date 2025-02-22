@@ -7,7 +7,7 @@ import { AppQueryParams } from "../types";
 function NavBar() {
   const { setParam } = useQueryMethods();
   return (
-    <div className="z-50 flex items-center justify-between">
+    <div className="z-50 flex items-center justify-between space-x-2">
       <Logo />
       <SearchInput
         selected={""}

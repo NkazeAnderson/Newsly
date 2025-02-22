@@ -84,3 +84,12 @@ export type TheGuardianResponse =    {
     "publication":string
   }
 }
+
+export type followings = {
+  name:string,
+  author?:string
+}
+
+export type user = {
+  followings: followings[]
+}

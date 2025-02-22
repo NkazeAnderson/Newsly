@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import NavBar from "./components/NavBar";
 import ArticlesContextProvider from "./contextProviders/ArticlesContextProvider";
+import UserContextProvider from "./contextProviders/UserContextProvider";
 
 function App() {
   return (
@@ -9,9 +10,11 @@ function App() {
         <NavBar />
       </div>
       <div className="relative mt-[100px] h-screen overflow-y-scroll pb-28">
-        <ArticlesContextProvider>
-          <Outlet />
-        </ArticlesContextProvider>
+        <UserContextProvider>
+          <ArticlesContextProvider>
+            <Outlet />
+          </ArticlesContextProvider>
+        </UserContextProvider>
       </div>
     </div>
   );

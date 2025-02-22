@@ -2,8 +2,7 @@ import Container from "./ui/Container";
 import CategorySelect from "./CategorySelect";
 import PeriodSelect from "./PeriodSelect";
 import ArticleCard from "./ArticleCard";
-import { periods, sources } from "../constants";
-import { categories } from "../mockedConstants";
+import { categories, periods, sources } from "../constants";
 import Spacer from "./ui/Spacer";
 import SourceSelect from "./SourceSelect";
 import { useQueryMethods } from "../hooks/useQueryMethods";
@@ -11,19 +10,54 @@ import { AppQueryParams } from "../types";
 import { useContext } from "react";
 import { ArticlesContext } from "../contextProviders/ArticlesContextProvider";
 import useArticles from "../hooks/useArticles";
+import { UserContext } from "../contextProviders/UserContextProvider";
+import useUser from "../hooks/useUser";
 
 function SearchContent() {
   const { getQueryValueFor, setParam, deleteParam } = useQueryMethods();
   const { articles, loading } = useContext(ArticlesContext) as ReturnType<
     typeof useArticles
   >;
+  const { addFollowing, confirmFollowings } = useContext(
+    UserContext,
+  ) as ReturnType<typeof useUser>;
   const sourcesSet = new Set(articles.map((item) => item.source.name));
   let displayedArticles = [...articles];
   const source = getQueryValueFor(AppQueryParams.source);
+  const period = getQueryValueFor(AppQueryParams.period);
   if (source) {
     displayedArticles = displayedArticles.filter(
       (item) => item.source.name === source,
     );
+  }
+  if (period) {
+    displayedArticles = displayedArticles.filter((item) => {
+      const selectedPeriod = periods.find((item) => item.value === period);
+      const millisecondsInOneDay = 1000 * 60 * 60 * 24;
+      const currentTimeStamp = new Date().getTime();
+      const articleTimeStamp = item.date.getTime();
+      switch (selectedPeriod?.value) {
+        case "day":
+          return articleTimeStamp + millisecondsInOneDay > currentTimeStamp;
+        case "week":
+          return articleTimeStamp + millisecondsInOneDay * 7 > currentTimeStamp;
+        case "month":
+          return (
+            articleTimeStamp + millisecondsInOneDay * 30 > currentTimeStamp
+          );
+        case "year":
+          return (
+            articleTimeStamp + millisecondsInOneDay * 30 * 12 > currentTimeStamp
+          );
+        case "plusOneYear":
+          return (
+            articleTimeStamp + millisecondsInOneDay * 30 * 12 < currentTimeStamp
+          );
+
+        default:
+          return true;
+      }
+    });
   }
 
   return (
@@ -36,8 +70,8 @@ function SearchContent() {
           removeQuery={deleteParam(AppQueryParams.category)}
         />
         <Spacer space={20} />
-        <div className="grid grid-cols-3">
-          <div className="col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          <div className="order-last col-span-1 md:order-first md:col-span-2">
             <div className="flex items-center justify-between rounded-r-2xl bg-black/20 p-2">
               <div className="flex-grow">
                 <h3>
@@ -62,17 +96,52 @@ function SearchContent() {
                   <p className="font-bold text-black">Loading...</p>
                 </div>
               ) : (
-                displayedArticles.map((item, index) => (
-                  <ArticleCard key={`${item.id}-${index}`} article={item} />
-                ))
+                <div>
+                  {!displayedArticles.length ? (
+                    <p>Sorry!, no Articles match this search</p>
+                  ) : (
+                    <div>
+                      <p className="py-2">
+                        <b>Results:</b> {displayedArticles.length}
+                      </p>
+                      {displayedArticles
+                        .sort((first, second) => {
+                          return (
+                            Number(
+                              confirmFollowings(first).isFollowingAuthor ||
+                                confirmFollowings(first).isFollowingSource,
+                            ) +
+                            Number(
+                              confirmFollowings(second).isFollowingAuthor ||
+                                confirmFollowings(second).isFollowingSource,
+                            )
+                          );
+                        })
+
+                        .map((item, index) => {
+                          const { isFollowingAuthor, isFollowingSource } =
+                            confirmFollowings(item);
+                          return (
+                            <ArticleCard
+                              key={`${item.id}-${index}`}
+                              article={item}
+                              addFollowing={addFollowing}
+                              isFollowingAuthor={isFollowingAuthor}
+                              isFollowingSource={isFollowingSource}
+                            />
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
-          <div className="px-7 py-2">
-            <div className="sticky top-10 max-h-[75vh] border border-gray-400 p-4 pb-10">
+          <div className="col-span-1 px-7 py-2">
+            <div className="sticky top-10 max-h-[25vh] border border-gray-400 p-4 pb-10 lg:max-h-[75vh]">
               <SourceSelect
                 sources={[...sourcesSet]}
-                selected={getQueryValueFor(AppQueryParams.source)}
+                selected={source}
                 setQueryValue={setParam(AppQueryParams.source)}
                 removeQuery={deleteParam(AppQueryParams.source)}
               />

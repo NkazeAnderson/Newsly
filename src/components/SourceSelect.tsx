@@ -22,7 +22,7 @@ function SourceSelect({
         </div>
       )}
       <Spacer space={10} />
-      <div className="max-h-[60vh] space-y-2 overflow-y-scroll">
+      <div className="max-h-[10vh] space-y-2 overflow-y-scroll lg:max-h-[60vh]">
         {sources.map((item) => (
           <p
             key={item}

@@ -28,6 +28,8 @@ class WebArticles {
     }
     private async makeRequest (url:string){
        const res = await fetch(url)
+       console.log(url);
+       
        if (res.status === 200) {
         return await res.json()
        }else{
