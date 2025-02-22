@@ -1,3 +1,4 @@
+import { QueryComponentsProps } from "../types";
 import Button from "./ui/Button";
 
 type Props = {

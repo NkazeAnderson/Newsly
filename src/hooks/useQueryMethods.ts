@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { AppQueryParams } from "../constants";
+import { AppQueryParams } from "../types";
 
 
 export function useQueryMethods() {

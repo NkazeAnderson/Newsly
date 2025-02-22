@@ -1,6 +1,7 @@
 import Spacer from "./ui/Spacer";
 import Button from "./ui/Button";
 import { FaX } from "react-icons/fa6";
+import { QueryComponentsProps } from "../types";
 
 type Props = {
   sources: string[];
@@ -12,7 +13,7 @@ function SourceSelect({
   removeQuery,
 }: Props) {
   return (
-    <>
+    <div className="overflow-hidden">
       <h2>Filter by Source</h2>
       {selected && (
         <div className="flex items-center gap-2">
@@ -21,11 +22,11 @@ function SourceSelect({
         </div>
       )}
       <Spacer space={10} />
-      <div className="space-y-2">
+      <div className="max-h-[60vh] space-y-2 overflow-y-scroll">
         {sources.map((item) => (
           <p
             key={item}
-            className="p-2 underline hover:cursor-pointer"
+            className="underline hover:cursor-pointer"
             onClick={() => {
               setQueryValue(item);
             }}
@@ -34,7 +35,7 @@ function SourceSelect({
           </p>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 

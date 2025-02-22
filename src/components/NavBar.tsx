@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "./ui/Logo";
 import SearchInput from "./ui/SearchInput";
 import { useQueryMethods } from "../hooks/useQueryMethods";
-import { AppQueryParams } from "../constants";
+import { AppQueryParams } from "../types";
 
 function NavBar() {
   const { setParam } = useQueryMethods();

@@ -1,3 +1,5 @@
+import { Period, QueryComponentsProps } from "../types";
+
 type Props = {
   periods: [Period, ...Period[]];
 } & QueryComponentsProps;

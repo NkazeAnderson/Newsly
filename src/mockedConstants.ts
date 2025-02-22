@@ -1,3 +1,5 @@
+import { Article } from "./types"
+
 export const categories = ["Politics", "Technology", 
     "Religion",
     "Religion 1",
@@ -10,31 +12,31 @@ export const articles: Article[] = [
     {source:{
         name:"New York Times",
         author:"Nkaze Anderson",
-        logo: "/logo.png"
+        api:"NYTimes"
     },
     title:"trump wins election",
     description:"trump wins big",
-    url: "www.google.com",
+    url: "https://www.google.com",
     imageUrl:"/hero.jpg"
 },
     {source:{
         name:"New York Times",
         author:"Nkaze Anderson",
-        logo: "/logo.png"
+        api:"NYTimes"
     },
     title:"trump wins election",
     description:"trump wins big",
-    url: "www.google.com",
+    url: "https://www.google.com",
     imageUrl:"/hero.jpg"
 },
     {source:{
         name:"New York Times",
         author:"Nkaze Anderson",
-        logo: "/logo.png"
+        api:"NYTimes"
     },
     title:"trump wins election",
     description:"trump wins big",
-    url: "www.google.com",
+    url: "https://www.google.com",
     imageUrl:"/hero.jpg"
 },
 ]
