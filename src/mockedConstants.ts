@@ -1,4 +1,4 @@
-import { Article } from "./types"
+
 
 export const categories = ["Politics", "Technology", 
     "Religion",

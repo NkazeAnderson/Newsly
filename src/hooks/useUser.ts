@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { Article, followings, user } from '../types'
 import { followingsLocalStorageKey } from '../constants'
 

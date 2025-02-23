@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Button from "./Button";
 import { QueryComponentsProps } from "../../types";
 
-function SearchInput({ setQueryValue, removeQuery }: QueryComponentsProps) {
+function SearchInput({ setQueryValue }: QueryComponentsProps) {
   const [keyword, setKeyword] = useState("");
   const search = () => {
     if (!keyword) {

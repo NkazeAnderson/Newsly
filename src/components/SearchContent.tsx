@@ -2,12 +2,12 @@ import Container from "./ui/Container";
 import CategorySelect from "./CategorySelect";
 import PeriodSelect from "./PeriodSelect";
 import ArticleCard from "./ArticleCard";
-import { categories, periods, sources } from "../constants";
+import { categories, periods } from "../constants";
 import Spacer from "./ui/Spacer";
 import SourceSelect from "./SourceSelect";
 import { useQueryMethods } from "../hooks/useQueryMethods";
-import { AppQueryParams } from "../types";
-import { useContext } from "react";
+import { AppQueryParams, Article } from "../types";
+import { useContext, useEffect, useState } from "react";
 import { ArticlesContext } from "../contextProviders/ArticlesContextProvider";
 import useArticles from "../hooks/useArticles";
 import { UserContext } from "../contextProviders/UserContextProvider";
@@ -21,10 +21,13 @@ function SearchContent() {
   const { addFollowing, confirmFollowings } = useContext(
     UserContext,
   ) as ReturnType<typeof useUser>;
+  const [sort, setSort] = useState(true);
+
   const sourcesSet = new Set(articles.map((item) => item.source.name));
   let displayedArticles = [...articles];
   const source = getQueryValueFor(AppQueryParams.source);
   const period = getQueryValueFor(AppQueryParams.period);
+  const category = getQueryValueFor(AppQueryParams.category);
   if (source) {
     displayedArticles = displayedArticles.filter(
       (item) => item.source.name === source,
@@ -60,12 +63,44 @@ function SearchContent() {
     });
   }
 
+  if (sort) {
+    const first: Article[] = [];
+    const second: Article[] = [];
+    displayedArticles.forEach((item) => {
+      const { isFollowingAuthor, isFollowingSource } = confirmFollowings(item);
+      if (isFollowingAuthor || isFollowingSource) {
+        first.push(item);
+        return;
+      }
+      second.push(item);
+    });
+    // displayedArticles = displayedArticles.sort((first, second) => {
+    //   return (
+    //     Number(
+    //       confirmFollowings(first).isFollowingAuthor ||
+    //         confirmFollowings(first).isFollowingSource,
+    //     ) -
+    //     Number(
+    //       confirmFollowings(second).isFollowingAuthor ||
+    //         confirmFollowings(second).isFollowingSource,
+    //     )
+    //   );
+    // });
+    displayedArticles = [...first, ...second];
+    setSort(false);
+  }
+
+  useEffect(() => {
+    setSort(true);
+    console.log("Sorting");
+  }, [category]);
+
   return (
     <Container>
       <div className="pb-10">
         <CategorySelect
           categories={categories}
-          selected={getQueryValueFor(AppQueryParams.category)}
+          selected={category}
           setQueryValue={setParam(AppQueryParams.category)}
           removeQuery={deleteParam(AppQueryParams.category)}
         />
@@ -82,7 +117,7 @@ function SearchContent() {
               <div>
                 <PeriodSelect
                   periods={periods}
-                  selected={getQueryValueFor(AppQueryParams.period)}
+                  selected={period}
                   setQueryValue={setParam(AppQueryParams.period)}
                   removeQuery={deleteParam(AppQueryParams.period)}
                 />
@@ -104,33 +139,19 @@ function SearchContent() {
                       <p className="py-2">
                         <b>Results:</b> {displayedArticles.length}
                       </p>
-                      {displayedArticles
-                        .sort((first, second) => {
-                          return (
-                            Number(
-                              confirmFollowings(first).isFollowingAuthor ||
-                                confirmFollowings(first).isFollowingSource,
-                            ) +
-                            Number(
-                              confirmFollowings(second).isFollowingAuthor ||
-                                confirmFollowings(second).isFollowingSource,
-                            )
-                          );
-                        })
-
-                        .map((item, index) => {
-                          const { isFollowingAuthor, isFollowingSource } =
-                            confirmFollowings(item);
-                          return (
-                            <ArticleCard
-                              key={`${item.id}-${index}`}
-                              article={item}
-                              addFollowing={addFollowing}
-                              isFollowingAuthor={isFollowingAuthor}
-                              isFollowingSource={isFollowingSource}
-                            />
-                          );
-                        })}
+                      {displayedArticles.map((item, index) => {
+                        const { isFollowingAuthor, isFollowingSource } =
+                          confirmFollowings(item);
+                        return (
+                          <ArticleCard
+                            key={`${item.id}-${index}`}
+                            article={item}
+                            addFollowing={addFollowing}
+                            isFollowingAuthor={isFollowingAuthor}
+                            isFollowingSource={isFollowingSource}
+                          />
+                        );
+                      })}
                     </div>
                   )}
                 </div>

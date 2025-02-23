@@ -107,4 +107,4 @@ class WebArticles {
     return resolvedPromises.flatMap(item=>item)
     }
 }
-export const WebArticleMethods =  new WebArticles()
+export const WebArticleMethods =  new WebArticles("UQCqCc06LRgaYAbizq8z9ItNtmgYpS5z", "287bf302-4c51-46a9-9f0a-6bb0f2ae2105", "a525d37a36704558a218c07304f16453")

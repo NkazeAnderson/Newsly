@@ -1,10 +1,8 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import Button from "./ui/Button";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { Article, followings } from "../types";
 import { Link } from "react-router";
-import { UserContext } from "../contextProviders/UserContextProvider";
-import useUser from "../hooks/useUser";
 
 type Props = {
   article: Article;
@@ -28,59 +26,71 @@ function ArticleCard({
       <div className="my-2 rounded-lg border border-gray-400 p-2">
         <div className="flex gap-2">
           <p>
-            From{" "}
-            <span
-              className="relative font-semibold text-black"
-              onMouseEnter={() => {
-                setShowSourceFollow(true);
-              }}
-              onMouseLeave={() => {
-                setShowSourceFollow(false);
-              }}
-            >
-              {source.name}
-              <span
-                className="absolute bottom-10 left-1/2 size-full rounded-4xl"
-                style={{ display: showSourceFollow ? "inline-block" : "none" }}
-              >
-                <Button
-                  variant="filled"
-                  icon={isFollowingSource ? FaMinus : FaPlus}
-                  text={isFollowingSource ? "Unfollow" : "Follow"}
-                  action={() => {
-                    addFollowing({ name: source.name });
+            {source.name && (
+              <>
+                From{" "}
+                <span
+                  className="relative font-semibold text-black"
+                  onMouseEnter={() => {
+                    setShowSourceFollow(true);
                   }}
-                />
-              </span>
-            </span>{" "}
-            by{" "}
-            <span
-              className="relative z-0 font-semibold text-black"
-              onMouseEnter={() => {
-                setShowAuthorFollow(true);
-              }}
-              onMouseLeave={() => {
-                setShowAuthorFollow(false);
-              }}
-            >
-              {source.author}
-              <span
-                className="absolute bottom-10 left-1/2 size-full rounded-4xl"
-                style={{ display: showAuthorFollow ? "inline-block" : "none" }}
-              >
-                <Button
-                  variant="filled"
-                  icon={isFollowingAuthor ? FaMinus : FaPlus}
-                  text={isFollowingAuthor ? "Unfollow" : "Follow"}
-                  action={() => {
-                    addFollowing({
-                      name: article.source.name,
-                      author: article.source.author,
-                    });
+                  onMouseLeave={() => {
+                    setShowSourceFollow(false);
                   }}
-                />
-              </span>
-            </span>
+                >
+                  {source.name}
+                  <span
+                    className="absolute bottom-10 left-1/2 size-full rounded-4xl"
+                    style={{
+                      display: showSourceFollow ? "inline-block" : "none",
+                    }}
+                  >
+                    <Button
+                      variant="filled"
+                      icon={isFollowingSource ? FaMinus : FaPlus}
+                      text={isFollowingSource ? "Unfollow" : "Follow"}
+                      action={() => {
+                        addFollowing({ name: source.name });
+                      }}
+                    />
+                  </span>
+                </span>{" "}
+              </>
+            )}
+            {source.author && (
+              <>
+                by{" "}
+                <span
+                  className="relative z-0 font-semibold text-black"
+                  onMouseEnter={() => {
+                    setShowAuthorFollow(true);
+                  }}
+                  onMouseLeave={() => {
+                    setShowAuthorFollow(false);
+                  }}
+                >
+                  {source.author}
+                  <span
+                    className="absolute bottom-10 left-1/2 size-full rounded-4xl"
+                    style={{
+                      display: showAuthorFollow ? "inline-block" : "none",
+                    }}
+                  >
+                    <Button
+                      variant="filled"
+                      icon={isFollowingAuthor ? FaMinus : FaPlus}
+                      text={isFollowingAuthor ? "Unfollow" : "Follow"}
+                      action={() => {
+                        addFollowing({
+                          name: article.source.name,
+                          author: article.source.author,
+                        });
+                      }}
+                    />
+                  </span>
+                </span>
+              </>
+            )}
           </p>
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
